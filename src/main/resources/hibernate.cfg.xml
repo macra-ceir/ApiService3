@@ -1,0 +1,48 @@
+<!--
+<?xml version='1.0' encoding='utf-8'?>
+<!DOCTYPE hibernate-configuration PUBLIC
+    "-//Hibernate/Hibernate Configuration DTD 3.0//EN"
+    "http://www.hibernate.org/dtd/hibernate-configuration-3.0.dtd">
+ 
+<hibernate-configuration>
+    <session-factory>
+ 
+ <property name="dialect">org.hibernate.dialect.MySQL5InnoDBDialect</property>
+   <property name="hibernate.connection.driver_class">com.mysql.jdbc.Driver</property>
+        <property name="hibernate.connection.url">jdbc:mysql://64.227.137.112/ceirdb1234</property>
+        <property name="connection.username">cdrp</property>
+        <property name="connection.password">Cdrp@1234</property>   
+ 
+        <property name="connection.pool_size">100</property>
+ 
+        <property name="cache.provider_class">org.hibernate.cache.NoCacheProvider</property>
+         Echo all executed SQL to stdout 
+        <property name="show_sql">true</property>
+         Drop and re-create the database schema on startup 
+        <property name="hbm2ddl.auto">none</property>
+        <mapping class="com.gl.ceir.config.service.impl.CheckImeiServiceImpl"/>
+    </session-factory>
+</hibernate-configuration>
+ 
+
+       
+        <property name="hibernate.connection.driver_class">com.mysql.jdbc.Driver</property>
+        <property name="hibernate.connection.url">jdbc:mysql://172.31.22.35:3306/ceirconfig</property>  
+        <property name="connection.username">root</property>
+        <property name="connection.password">root</property> 
+     
+        
+      MangoServer
+     
+     
+
+
+        
+     #LabServer50-51
+   <property name="hibernate.connection.driver_class">oracle.jdbc.driver.OracleDriver</property>
+        <property name="hibernate.connection.url">jdbc:oracle:thin:@172.24.2.55:1527/dmclabdb</property>
+        <property name="connection.username">CRESTELCEIR</property>
+        <property name="connection.password">CRESTELCEIR123#</property> 
+         <property name="dialect">org.hibernate.dialect.Oracle12cDialect</property>
+
+         JDBC connection pool (use the built-in) -->
