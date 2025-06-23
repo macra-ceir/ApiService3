@@ -81,7 +81,7 @@ public class CheckImeiServiceImpl {
     public CheckImeiResponse getImeiDetailsDevicesNew(CheckImeiRequest checkImeiRequest, long startTime) {
         try {
             LinkedHashMap<String, Boolean> rules = getResponseFromRuleEngine(checkImeiRequest);
-            setComplianceValueByRule(checkImeiRequest, rules);
+            setComplianceValueByRuleV2(checkImeiRequest, rules);
             var responseTag = "CheckImeiResponse_" + checkImeiRequest.getComplianceValue();  // optimise
             logger.info("Response Tag :: " + responseTag);
             var result = getResult(checkImeiRequest, rules, responseTag);
@@ -105,16 +105,31 @@ public class CheckImeiServiceImpl {
     }
 
     //MDR //NATIONAL_WHITELISTS  // NWL_VALIDITYFLAG //   // CUSTOM_LOCAL_MANUFACTURER // TRC // if not present make pass
-    private void setComplianceValueByRule(CheckImeiRequest checkImeiRequest, LinkedHashMap<String, Boolean> r) {
+    private void setComplianceValueByRuleV2(CheckImeiRequest checkImeiRequest, LinkedHashMap<String, Boolean> r) {
         int complianceValue = 0;
         boolean isWhitelisted = r.containsKey("NATIONAL_WHITELISTS") ? r.get("NATIONAL_WHITELISTS") : true;
         boolean isNWLValid = r.containsKey("NWL_VALIDITYFLAG") ? r.get("NWL_VALIDITYFLAG") : true;
-        boolean isCustomManufacturer = r.containsKey("CUSTOM_LOCAL_MANUFACTURER") ? r.get("CUSTOM_LOCAL_MANUFACTURER") : true;
-        boolean isMDR = r.containsKey("MDR") ? r.get("MDR") : true;
+        boolean isGsmaValid = r.get("EXISTS_IN_GSMA_DETAILS_DB") == null ? false : r.get("EXISTS_IN_GSMA_DETAILS_DB");
+        boolean isTypeApproved = r.get("GSMA_TYPE_APPROVED") == null ? false : r.get("GSMA_TYPE_APPROVED");
+
         if (isWhitelisted) {
-            complianceValue = isNWLValid ? (isCustomManufacturer ? 1 : 3) : 2;
+            if (isNWLValid) {
+                if (isTypeApproved)
+                    complianceValue = 1;
+                else
+                    complianceValue = 2;
+            } else {
+                complianceValue = 3;
+            }
         } else {
-            complianceValue = isMDR ? (isCustomManufacturer ? 4 : 5) : 6;
+            if (isGsmaValid) {
+                if (isTypeApproved)
+                    complianceValue = 4;
+                else
+                    complianceValue = 5;
+            } else {
+                complianceValue = 6;
+            }
         }
         checkImeiRequest.setComplianceValue(complianceValue);
     }
@@ -122,17 +137,17 @@ public class CheckImeiServiceImpl {
 
     private LinkedHashMap<String, Boolean> getResponseFromRuleEngine(CheckImeiRequest checkImeiRequest) {
         try (Connection conn = dbRepository.getConnection()) {
-        var deviceInfo = Map.of("appdbName", "app", "auddbName", "aud", "repdbName", "rep", "edrappdbName", "app_edr",
-                "userType", "default",
-                "imei", checkImeiRequest.getImei(), "msisdn", checkImeiRequest.getMsisdn() == null ? "" : checkImeiRequest.getMsisdn(), "imsi", checkImeiRequest.getImsi() == null ? "" : checkImeiRequest.getImsi(), "feature", "CheckImei", "operator", checkImeiRequest.getOperator() == null ? "" : checkImeiRequest.getOperator());
-        var startTime = System.currentTimeMillis();
-        LinkedHashMap<String, Boolean> rules = RuleEngineAdaptor.startAdaptor(conn, deviceInfo);
-        logger.info("Rule response  {}", rules);
-        logger.info( ":RuleEngine Time Taken is  :->" + (System.currentTimeMillis() - startTime) +" *** connection :-"+ conn);
+            var deviceInfo = Map.of("appdbName", "app", "auddbName", "aud", "repdbName", "rep", "edrappdbName", "app_edr",
+                    "userType", "default",
+                    "imei", checkImeiRequest.getImei(), "msisdn", checkImeiRequest.getMsisdn() == null ? "" : checkImeiRequest.getMsisdn(), "imsi", checkImeiRequest.getImsi() == null ? "" : checkImeiRequest.getImsi(), "feature", "CheckImei", "operator", checkImeiRequest.getOperator() == null ? "" : checkImeiRequest.getOperator());
+            var startTime = System.currentTimeMillis();
+            LinkedHashMap<String, Boolean> rules = RuleEngineAdaptor.startAdaptor(conn, deviceInfo);
+            logger.info("Rule response  {}", rules);
+            logger.info(":RuleEngine Time Taken is  :->" + (System.currentTimeMillis() - startTime) + " *** connection :-" + conn);
             return rules;
         } catch (Exception e) {
-            logger.error("Not able to get rules {}",e.getMessage());
-           return null;
+            logger.error("Not able to get rules {}", e.getMessage());
+            return null;
         }
     }
 
@@ -181,22 +196,36 @@ public class CheckImeiServiceImpl {
         boolean IMEI_PAIRING = r.getOrDefault("IMEI_PAIRING", false);
         boolean STOLEN = r.getOrDefault(stolenRule.trim(), false);
         boolean DUPLICATE_DEVICE = r.getOrDefault("DUPLICATE_DEVICE", false);
-        boolean BLACKLIST = r.getOrDefault("EXIST_IN_BLACKLIST_DB", false);
+        boolean GSMA_BLACKLIST = r.getOrDefault("GSMA_BLACK_LISTED", false);
+        boolean isGsmaValid = r.get("EXISTS_IN_GSMA_DETAILS_DB") == null ? false : r.get("EXISTS_IN_GSMA_DETAILS_DB");
 
-        logger.info("Remarks Check IMEI_PAIRING: {} , Stolen : {} ,DUPLICATE_DEVICE : {} ,BLACKLIST {} ", IMEI_PAIRING, STOLEN, DUPLICATE_DEVICE, BLACKLIST);
-        if (IMEI_PAIRING) {
-            if (DUPLICATE_DEVICE) {
-                val = STOLEN ? 1 : (BLACKLIST ? 2 : 3);
-            } else {
-                val = STOLEN ? 4 : (BLACKLIST ? 5 : 6);
-            }
-        } else {
-            if (DUPLICATE_DEVICE) {
-                val = STOLEN ? 7 : (BLACKLIST ? 8 : 9);
-            } else {
-                val = STOLEN ? 10 : (BLACKLIST ? 11 : 12);
-            }
-        }
+        logger.info("Remarks Check IMEI_PAIRING: {} , Stolen : {} ,DUPLICATE_DEVICE : {} ,GSMA_BLACKLIST {} ", IMEI_PAIRING, STOLEN, DUPLICATE_DEVICE, GSMA_BLACKLIST);
+
+        if (!isGsmaValid && DUPLICATE_DEVICE && STOLEN)
+            val = 1;
+        if (!isGsmaValid && DUPLICATE_DEVICE && !STOLEN && GSMA_BLACKLIST)
+            val = 2;
+        if (!isGsmaValid && DUPLICATE_DEVICE && !STOLEN && !GSMA_BLACKLIST)
+            val = 3;
+        if (!isGsmaValid && !DUPLICATE_DEVICE && STOLEN)
+            val = 4;
+        if (!isGsmaValid && !DUPLICATE_DEVICE && !STOLEN && GSMA_BLACKLIST)
+            val = 5;
+        if (!isGsmaValid && !DUPLICATE_DEVICE && !STOLEN && !GSMA_BLACKLIST)
+            val = 6;
+        if (isGsmaValid && DUPLICATE_DEVICE && STOLEN)
+            val = 7;
+        if (isGsmaValid && DUPLICATE_DEVICE && !STOLEN && GSMA_BLACKLIST)
+            val = 8;
+        if (isGsmaValid && DUPLICATE_DEVICE && !STOLEN && !GSMA_BLACKLIST)
+            val = 9;
+        if (isGsmaValid && !DUPLICATE_DEVICE && STOLEN)
+            val = 10;
+        if (isGsmaValid && !DUPLICATE_DEVICE && !STOLEN && GSMA_BLACKLIST)
+            val = 11;
+        if (isGsmaValid && !DUPLICATE_DEVICE && !STOLEN && !GSMA_BLACKLIST)
+            val = 12;
+
         var remarkTag = "CheckImeiRemark_" + val;
         logger.info("Remarks tag {} ", remarkTag);
         var v = chkImeiRespPrmRepo.getByTagAndLanguage(checkImeiRequest.getChannel().equalsIgnoreCase("ussd")

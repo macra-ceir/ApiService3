@@ -1,0 +1,21 @@
+insert into app.rule (DESCRIPTION,NAME,OUTPUT,STATE) values ('Type approved Rule','GSMA_TYPE_APPROVED','YES','Enabled');
+insert into app.rule (DESCRIPTION,NAME,OUTPUT,STATE) values ('GSMA Valid Check Rule','EXISTS_IN_GSMA_DETAILS_DB','YES','Enabled');
+insert into app.rule (DESCRIPTION,NAME,OUTPUT,STATE) values ('GSMA Black Listed','GSMA_BLACK_LISTED','YES','Enabled');
+
+insert into app.feature_rule (FEATURE,GRACE_ACTION,NAME,POST_GRACE_ACTION,RULE_ORDER,USER_TYPE,FAILED_RULE_ACTION_GRACE,FAILED_RULE_ACTION_POST_GRACE,OUTPUT,RULE_MESSAGE) values ('CheckImei','Skip','GSMA_TYPE_APPROVED','',7,'default','Rule','Rule','Yes','');
+insert into app.feature_rule (FEATURE,GRACE_ACTION,NAME,POST_GRACE_ACTION,RULE_ORDER,USER_TYPE,FAILED_RULE_ACTION_GRACE,FAILED_RULE_ACTION_POST_GRACE,OUTPUT,RULE_MESSAGE) values ('CheckImei','Skip','EXISTS_IN_GSMA_DETAILS_DB','',8,'default','Rule','Rule','Yes','');
+insert into app.feature_rule (FEATURE,GRACE_ACTION,NAME,POST_GRACE_ACTION,RULE_ORDER,USER_TYPE,FAILED_RULE_ACTION_GRACE,FAILED_RULE_ACTION_POST_GRACE,OUTPUT,RULE_MESSAGE) values ('CheckImei','Skip','GSMA_BLACK_LISTED','',9,'default','Rule','Rule','Yes','');
+
+///////////To Validate rule is enabled
+select a.id as rule_id,  b.rule_message,   a.name as rule_name,b.output as output,b.grace_action, b.post_grace_action, b.failed_rule_action_grace, b.failed_rule_action_post_grace  from app.rule a, app.feature_rule b where  a.name=b.name  and  a.state='Enabled' and   b.user_type = 'default' and  b.feature='CheckImei'  and (  b.grace_action !='NA'   and   b.grace_action !='Disabled' )   order by b.rule_order asc;
+
+//// Remove or disable IMEI_PAIRING rule , EXIST_IN_BLACKLIST_DB
+
+VALUE                                                                            TAG
+-------------------------------------------------------------------------------- ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+##219653                                                                         CheckImeiResponse_1_SymbolColor
+#eb5757                                                                          CheckImeiResponse_2_SymbolColor
+#eb5757                                                                          CheckImeiResponse_3_SymbolColor
+#FFCC02                                                                          CheckImeiResponse_4_SymbolColor
+#eb5757                                                                          CheckImeiResponse_5_SymbolColor
+#eb5757                                                                          CheckImeiResponse_6_SymbolColor
