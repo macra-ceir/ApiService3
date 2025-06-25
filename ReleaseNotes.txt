@@ -1,3 +1,10 @@
+##########-----Release 1.0.0.2
+
+---Description
+1. GSMA BLACK LISTED and Type Approval Checks added
+
+---Database Changes
+
 insert into app.rule (DESCRIPTION,NAME,OUTPUT,STATE) values ('Type approved Rule','GSMA_TYPE_APPROVED','YES','Enabled');
 insert into app.rule (DESCRIPTION,NAME,OUTPUT,STATE) values ('GSMA Valid Check Rule','EXISTS_IN_GSMA_DETAILS_DB','YES','Enabled');
 insert into app.rule (DESCRIPTION,NAME,OUTPUT,STATE) values ('GSMA Black Listed','GSMA_BLACK_LISTED','YES','Enabled');
@@ -6,16 +13,88 @@ insert into app.feature_rule (FEATURE,GRACE_ACTION,NAME,POST_GRACE_ACTION,RULE_O
 insert into app.feature_rule (FEATURE,GRACE_ACTION,NAME,POST_GRACE_ACTION,RULE_ORDER,USER_TYPE,FAILED_RULE_ACTION_GRACE,FAILED_RULE_ACTION_POST_GRACE,OUTPUT,RULE_MESSAGE) values ('CheckImei','Skip','EXISTS_IN_GSMA_DETAILS_DB','',8,'default','Rule','Rule','Yes','');
 insert into app.feature_rule (FEATURE,GRACE_ACTION,NAME,POST_GRACE_ACTION,RULE_ORDER,USER_TYPE,FAILED_RULE_ACTION_GRACE,FAILED_RULE_ACTION_POST_GRACE,OUTPUT,RULE_MESSAGE) values ('CheckImei','Skip','GSMA_BLACK_LISTED','',9,'default','Rule','Rule','Yes','');
 
-///////////To Validate rule is enabled
-select a.id as rule_id,  b.rule_message,   a.name as rule_name,b.output as output,b.grace_action, b.post_grace_action, b.failed_rule_action_grace, b.failed_rule_action_post_grace  from app.rule a, app.feature_rule b where  a.name=b.name  and  a.state='Enabled' and   b.user_type = 'default' and  b.feature='CheckImei'  and (  b.grace_action !='NA'   and   b.grace_action !='Disabled' )   order by b.rule_order asc;
+INSERT INTO sys_param (description, tag, type, value, active, feature_name, remark, user_type, modified_by) VALUES ('URL of Check GSMA BLACKLISTED', 'CHECK_GSMA_BLACKLISTED_URL', 0, 'http://139.59.91.160:9508/globalCheckIMEI/gsmaGlobalBlackListAPI/checkStatus', 1, 'CheckImei', NULL, 'system', 'system');
 
-//// Remove or disable IMEI_PAIRING rule , EXIST_IN_BLACKLIST_DB
+-----------------------------------Message Displayed  For Web
+delete from check_imei_response_param where tag='CheckImeiResponse_1_Msg';
+delete from check_imei_response_param where tag='CheckImeiResponse_2_Msg';
+delete from check_imei_response_param where tag='CheckImeiResponse_3_Msg';
+delete from check_imei_response_param where tag='CheckImeiResponse_4_Msg';
+delete from check_imei_response_param where tag='CheckImeiResponse_5_Msg';
+delete from check_imei_response_param where tag='CheckImeiResponse_6_Msg';
 
-VALUE                                                                            TAG
--------------------------------------------------------------------------------- ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-##219653                                                                         CheckImeiResponse_1_SymbolColor
-#eb5757                                                                          CheckImeiResponse_2_SymbolColor
-#eb5757                                                                          CheckImeiResponse_3_SymbolColor
-#FFCC02                                                                          CheckImeiResponse_4_SymbolColor
-#eb5757                                                                          CheckImeiResponse_5_SymbolColor
-#eb5757                                                                          CheckImeiResponse_6_SymbolColor
+
+INSERT INTO check_imei_response_param (description,tag,type,VALUE,ACTIVE,FEATURE_NAME,LANGUAGE) values ('','CheckImeiResponse_1_Msg',0,'This IMEI is allowed to work in Malawi Mobile Network Operator.',0,'CheckImei','en');
+
+INSERT INTO check_imei_response_param (description,tag,type,VALUE,ACTIVE,FEATURE_NAME,LANGUAGE) values ('','CheckImeiResponse_2_Msg',0,'This IMEI is temporarily allowed to work in Malawi Mobile Network Operator until further notification from CEIR Authority. People should not buy any devices whose IMEI is Non-Compliant with CEIR',0,'CheckImei','en');
+
+INSERT INTO check_imei_response_param (description,tag,type,VALUE,ACTIVE,FEATURE_NAME,LANGUAGE) values ('','CheckImeiResponse_3_Msg',0,'This IMEI is temporarily allowed to work in Malawi Mobile Network Operator until further notification from CEIR Authority. People should not buy any devices whose IMEI is Non-Compliant with CEIR',0,'CheckImei','en');
+
+INSERT INTO check_imei_response_param (description,tag,type,VALUE,ACTIVE,FEATURE_NAME,LANGUAGE) values ('','CheckImeiResponse_4_Msg',0,'Your device IMEI is not found in CEIR system',0,'CheckImei','en');
+
+INSERT INTO check_imei_response_param (description,tag,type,VALUE,ACTIVE,FEATURE_NAME,LANGUAGE) values ('','CheckImeiResponse_5_Msg',0,'Your device IMEI is not found in CEIR system ',0,'CheckImei','en');
+
+INSERT INTO check_imei_response_param (description,tag,type,VALUE,ACTIVE,FEATURE_NAME,LANGUAGE) values ('','CheckImeiResponse_6_Msg',0,'This IMEI is temporarily allowed to work in Malawi Mobile Network Operator until further notification from CEIR Authorities. People should not buy any device whose IMEI is not compliant.',0,'CheckImei','en');
+
+-----------------------------------Compliance Status on  Web
+delete from check_imei_response_param where tag='CheckImeiResponse_1_Compliance';
+delete from check_imei_response_param where tag='CheckImeiResponse_2_Compliance';
+delete from check_imei_response_param where tag='CheckImeiResponse_3_Compliance';
+delete from check_imei_response_param where tag='CheckImeiResponse_4_Compliance';
+delete from check_imei_response_param where tag='CheckImeiResponse_5_Compliance';
+delete from check_imei_response_param where tag='CheckImeiResponse_6_Compliance';
+
+
+INSERT INTO check_imei_response_param (description,tag,type,VALUE,ACTIVE,FEATURE_NAME,LANGUAGE) values ('','CheckImeiResponse_1_Compliance',0,'IMEI is CEIR Compliant',0,'CheckImei','en');
+
+INSERT INTO check_imei_response_param (description,tag,type,VALUE,ACTIVE,FEATURE_NAME,LANGUAGE) values ('','CheckImeiResponse_2_Compliance',0,'IMEI is not CEIR Compliant',0,'CheckImei','en');
+
+INSERT INTO check_imei_response_param (description,tag,type,VALUE,ACTIVE,FEATURE_NAME,LANGUAGE) values ('','CheckImeiResponse_3_Compliance',0,'IMEI is not CEIR Compliant',0,'CheckImei','en');
+
+INSERT INTO check_imei_response_param (description,tag,type,VALUE,ACTIVE,FEATURE_NAME,LANGUAGE) values ('','CheckImeiResponse_4_Compliance',0,'IMEI is CEIR Compliant',0,'CheckImei','en');
+
+INSERT INTO check_imei_response_param (description,tag,type,VALUE,ACTIVE,FEATURE_NAME,LANGUAGE) values ('','CheckImeiResponse_5_Compliance',0,'IMEI is not CEIR Compliant',0,'CheckImei','en');
+
+INSERT INTO check_imei_response_param (description,tag,type,VALUE,ACTIVE,FEATURE_NAME,LANGUAGE) values ('','CheckImeiResponse_6_Compliance',0,'IMEI is not CEIR Compliant',0,'CheckImei','en');
+
+-----------------------------------Additional Message on Web
+delete from check_imei_response_param where tag='CheckImeiRemark_1';
+delete from check_imei_response_param where tag='CheckImeiRemark_2';
+delete from check_imei_response_param where tag='CheckImeiRemark_3';
+delete from check_imei_response_param where tag='CheckImeiRemark_4';
+delete from check_imei_response_param where tag='CheckImeiRemark_5';
+delete from check_imei_response_param where tag='CheckImeiRemark_6';
+delete from check_imei_response_param where tag='CheckImeiRemark_7';
+delete from check_imei_response_param where tag='CheckImeiRemark_8';
+delete from check_imei_response_param where tag='CheckImeiRemark_9';
+delete from check_imei_response_param where tag='CheckImeiRemark_10';
+delete from check_imei_response_param where tag='CheckImeiRemark_11';
+delete from check_imei_response_param where tag='CheckImeiRemark_12';
+
+INSERT INTO check_imei_response_param (description,tag,type,VALUE,ACTIVE,FEATURE_NAME,LANGUAGE) values ('','CheckImeiRemark_1',0,'This IMEI is found to be marked as duplicate and stolen.',0,'CheckImei','en');
+
+INSERT INTO check_imei_response_param (description,tag,type,VALUE,ACTIVE,FEATURE_NAME,LANGUAGE) values ('','CheckImeiRemark_2',0,'This IMEI is found to be marked as duplicate and blacklisted.',0,'CheckImei','en');
+
+INSERT INTO check_imei_response_param (description,tag,type,VALUE,ACTIVE,FEATURE_NAME,LANGUAGE) values ('','CheckImeiRemark_3',0,'This IMEI is found to be duplicate.',0,'CheckImei','en');
+
+INSERT INTO check_imei_response_param (description,tag,type,VALUE,ACTIVE,FEATURE_NAME,LANGUAGE) values ('','CheckImeiRemark_4',0,'This IMEI is found to be marked as stolen.',0,'CheckImei','en');
+
+INSERT INTO check_imei_response_param (description,tag,type,VALUE,ACTIVE,FEATURE_NAME,LANGUAGE) values ('','CheckImeiRemark_5',0,'This IMEI is found to be marked as blacklisted.',0,'CheckImei','en');
+
+INSERT INTO check_imei_response_param (description,tag,type,VALUE,ACTIVE,FEATURE_NAME,LANGUAGE) values ('','CheckImeiRemark_6',0,'',0,'CheckImei','en');
+
+INSERT INTO check_imei_response_param (description,tag,type,VALUE,ACTIVE,FEATURE_NAME,LANGUAGE) values ('','CheckImeiRemark_7',0,'This IMEI is found to be marked as globally blacklisted, duplicate and stolen.',0,'CheckImei','en');
+
+INSERT INTO check_imei_response_param (description,tag,type,VALUE,ACTIVE,FEATURE_NAME,LANGUAGE) values ('','CheckImeiRemark_8',0,'This IMEI is found to be marked as globally  blacklisted, duplicate and blacklisted. ',0,'CheckImei','en');
+
+INSERT INTO check_imei_response_param (description,tag,type,VALUE,ACTIVE,FEATURE_NAME,LANGUAGE) values ('','CheckImeiRemark_9',0,'This IMEI is found to be duplicate and globally blacklisted',0,'CheckImei','en');
+
+INSERT INTO check_imei_response_param (description,tag,type,VALUE,ACTIVE,FEATURE_NAME,LANGUAGE) values ('','CheckImeiRemark_10',0,'This IMEI is found to be marked as stolen and globaly blacklisted',0,'CheckImei','en');
+
+INSERT INTO check_imei_response_param (description,tag,type,VALUE,ACTIVE,FEATURE_NAME,LANGUAGE) values ('','CheckImeiRemark_11',0,'This IMEI is found to be marked as blacklisted and globally blacklisted',0,'CheckImei','en');
+
+INSERT INTO check_imei_response_param (description,tag,type,VALUE,ACTIVE,FEATURE_NAME,LANGUAGE) values ('','CheckImeiRemark_12',0,'This IMEI is found to be marked as globaly blacklisted ',0,'CheckImei','en');
+
+---application.yml
+
+NA
