@@ -7,20 +7,19 @@
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-starter-parent</artifactId>
         <version>2.6.2</version>
-        <relativePath /> <!-- lookup parent from repository -->
+        <relativePath/> <!-- lookup parent from repository -->
     </parent>
 
     <groupId>com.gl.ceir</groupId>
     <artifactId>apiservice3</artifactId>
-     <name>apiservice3</name>
+    <version>1.1.0.0</version>
+    <name>apiservice3</name>
 
     <properties>
         <java.version>11</java.version>
         <spring-cloud.version>Finchley.SR4</spring-cloud.version>
         <log4j2.version>2.20.0</log4j2.version>
     </properties>
-
-
 
 
     <dependencies>
@@ -83,7 +82,7 @@
             <groupId>com.github.ulisesbocchio</groupId>
             <artifactId>jasypt-spring-boot</artifactId>    <!--  IF NOT WORKING MIGHT BE   -spring-boot-starter?-->
             <version>1.18</version>
-          <type>jar</type>
+            <type>jar</type>
         </dependency>
 
         <dependency>
@@ -93,23 +92,23 @@
             <type>jar</type>
         </dependency>
 
-                <dependency>
-                    <groupId>org.springframework.data</groupId>
-                    <artifactId>spring-data-envers</artifactId>
-                </dependency>
+        <dependency>
+            <groupId>org.springframework.data</groupId>
+            <artifactId>spring-data-envers</artifactId>
+        </dependency>
 
-                <dependency>
-                    <groupId>org.springframework.boot</groupId>
-                    <artifactId>spring-boot-devtools</artifactId>
-                    <scope>runtime</scope>
-                </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-devtools</artifactId>
+            <scope>runtime</scope>
+        </dependency>
 
 
-                <dependency>
-                    <groupId>org.hibernate</groupId>
-                    <artifactId>hibernate-core</artifactId>
-                    <type>jar</type>
-                </dependency>
+        <dependency>
+            <groupId>org.hibernate</groupId>
+            <artifactId>hibernate-core</artifactId>
+            <type>jar</type>
+        </dependency>
 
         <dependency>
             <groupId>org.hibernate</groupId>
@@ -235,131 +234,125 @@
 </project>
 
 
+        <!--        <dependency>
+            <groupId>io.springfox</groupId>
+            <artifactId>springfox-swagger2</artifactId>
+            <version>2.9.2</version>
+        </dependency>
 
-<!--        <dependency>
-    <groupId>io.springfox</groupId>
-    <artifactId>springfox-swagger2</artifactId>
-    <version>2.9.2</version>
-</dependency>
-
-<dependency>
-    <groupId>io.springfox</groupId>
-    <artifactId>springfox-swagger-ui</artifactId>
-    <version>2.9.2</version>
-</dependency>-->
-
+        <dependency>
+            <groupId>io.springfox</groupId>
+            <artifactId>springfox-swagger-ui</artifactId>
+            <version>2.9.2</version>
+        </dependency>-->
 
 
+        <!--		<dependency>
+                <groupId>org.springframework.cloud</groupId>
+                <artifactId>spring-cloud-starter-openfeign</artifactId>
+        </dependency>-->
 
-<!--		<dependency>
-        <groupId>org.springframework.cloud</groupId>
-        <artifactId>spring-cloud-starter-openfeign</artifactId>
-</dependency>-->
+        <!--		<dependency>
+                <groupId>org.springframework.data</groupId>
+                <artifactId>spring-data-envers</artifactId>
+        </dependency>-->
 
-<!--		<dependency>
-        <groupId>org.springframework.data</groupId>
-        <artifactId>spring-data-envers</artifactId>
-</dependency>-->
+        <!--		<dependency>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-starter-actuator</artifactId>
+        </dependency>-->
+        <!--        <dependency>
+            <groupId>com.github.ulisesbocchio</groupId>
+            <artifactId>jasypt-spring-boot-starter</artifactId>
+            <version>2.0.0</version>
+        </dependency>
+        -->
 
-<!--		<dependency>
-        <groupId>org.springframework.boot</groupId>
-        <artifactId>spring-boot-starter-actuator</artifactId>
-</dependency>-->
-<!--        <dependency>
-    <groupId>com.github.ulisesbocchio</groupId>
-    <artifactId>jasypt-spring-boot-starter</artifactId>
-    <version>2.0.0</version>
-</dependency>
--->
-
-<!--            <plugin>
-    <groupId>org.apache.maven.plugins</groupId>
-    <artifactId>maven-jar-plugin</artifactId>
-    <version>3.1.2</version>
-    <executions>
-        <execution>
-            <goals>
-                <goal>jar</goal>
-            </goals>
-            <phase>package</phase>
-            <configuration>
-                <classifier>import-lib</classifier>
-            </configuration>
-        </execution>
-    </executions>
-</plugin>-->
-
+        <!--            <plugin>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-jar-plugin</artifactId>
+            <version>3.1.2</version>
+            <executions>
+                <execution>
+                    <goals>
+                        <goal>jar</goal>
+                    </goals>
+                    <phase>package</phase>
+                    <configuration>
+                        <classifier>import-lib</classifier>
+                    </configuration>
+                </execution>
+            </executions>
+        </plugin>-->
 
 
-<!--        <dependency>
-    <groupId>commons-configuration</groupId>
-    <artifactId>commons-configuration</artifactId>
-    <version>1.9</version>
-</dependency>-->
+        <!--        <dependency>
+            <groupId>commons-configuration</groupId>
+            <artifactId>commons-configuration</artifactId>
+            <version>1.9</version>
+        </dependency>-->
 
 
+        <!--        <dependency>
 
-<!--        <dependency>
+            <groupId>org.springframework.security</groupId>
+            <artifactId>spring-security-config</artifactId>
+            <type>jar</type>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.security</groupId>
+            <artifactId>spring-security-web</artifactId>
+            <type>jar</type>
+        </dependency>-->
 
-    <groupId>org.springframework.security</groupId>
-    <artifactId>spring-security-config</artifactId>
-    <type>jar</type>
-</dependency>
-<dependency>
-    <groupId>org.springframework.security</groupId>
-    <artifactId>spring-security-web</artifactId>
-    <type>jar</type>
-</dependency>-->
-
-<!--        <dependency>
-    <groupId>org.springframework.boot</groupId>
-    <artifactId>spring-boot-starter-actuator</artifactId>
-</dependency> -->
-
+        <!--        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-actuator</artifactId>
+        </dependency> -->
 
 
-<!--To automatically  run on change-->
+        <!--To automatically  run on change-->
 
-<!--
-  <dependency>
-    <groupId>org.springframework.cloud</groupId>
-    <artifactId>spring-cloud-starter-config</artifactId>
-</dependency>
+        <!--
+          <dependency>
+            <groupId>org.springframework.cloud</groupId>
+            <artifactId>spring-cloud-starter-config</artifactId>
+        </dependency>
 
-<dependency>
-   <groupId>org.springframework.boot</groupId>
-   <artifactId>spring-boot-starter-actuator</artifactId>
-</dependency>
-<dependency>
-   <groupId>org.springframework.security</groupId>
-   <artifactId>spring-security-config</artifactId>
-   <type>jar</type>
-</dependency>
-<dependency>
-   <groupId>org.springframework.security</groupId>
-   <artifactId>spring-security-web</artifactId>
-   <type>jar</type>
-</dependency>-->
+        <dependency>
+           <groupId>org.springframework.boot</groupId>
+           <artifactId>spring-boot-starter-actuator</artifactId>
+        </dependency>
+        <dependency>
+           <groupId>org.springframework.security</groupId>
+           <artifactId>spring-security-config</artifactId>
+           <type>jar</type>
+        </dependency>
+        <dependency>
+           <groupId>org.springframework.security</groupId>
+           <artifactId>spring-security-web</artifactId>
+           <type>jar</type>
+        </dependency>-->
 
-<!--        <dependency>
-    <groupId>com.glocks</groupId>
-    <artifactId>Alert</artifactId>
-    <version>1.0</version>
-    <type>jar</type>
-</dependency>-->
+        <!--        <dependency>
+            <groupId>com.glocks</groupId>
+            <artifactId>Alert</artifactId>
+            <version>1.0</version>
+            <type>jar</type>
+        </dependency>-->
 
 
-<!--   <dependency>
-<groupId>org.springframework.security</groupId>
-<artifactId>spring-security-web</artifactId>
-</dependency> -->
+        <!--   <dependency>
+        <groupId>org.springframework.security</groupId>
+        <artifactId>spring-security-web</artifactId>
+        </dependency> -->
 
-<!--        <dependency>
-    <groupId>org.springframework.security</groupId>
-    <artifactId>spring-security-config</artifactId>
-</dependency>
+        <!--        <dependency>
+            <groupId>org.springframework.security</groupId>
+            <artifactId>spring-security-config</artifactId>
+        </dependency>
 
-<dependency>
-    <groupId>org.springframework.security</groupId>
-    <artifactId>spring-security-web</artifactId>
-</dependency>-->
+        <dependency>
+            <groupId>org.springframework.security</groupId>
+            <artifactId>spring-security-web</artifactId>
+        </dependency>-->

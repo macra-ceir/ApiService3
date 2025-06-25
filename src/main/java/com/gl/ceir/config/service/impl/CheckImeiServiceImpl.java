@@ -169,15 +169,18 @@ public class CheckImeiServiceImpl {
         } catch (Exception e) {
             logger.warn(" **** MDR/NWL Rule might not initialised .");
         }
-        var message = chkImeiRespPrmRepo.getByTagAndLanguage(checkImeiRequest.getChannel().equalsIgnoreCase("ussd") ? status + "_MsgForUssd" : checkImeiRequest.getChannel().equalsIgnoreCase("sms") ? status + "_MsgForSms" : status + "_Msg", checkImeiRequest.getLanguage()).getValue().replace("<imei>", checkImeiRequest.getImei());
+        String messageTag = checkImeiRequest.getChannel().equalsIgnoreCase("ussd") ? status + "_MsgForUssd" : checkImeiRequest.getChannel().equalsIgnoreCase("sms") ? status + "_MsgForSms" : status + "_Msg";
+        var message = chkImeiRespPrmRepo.getByTagAndLanguage(messageTag, checkImeiRequest.getLanguage()).getValue().replace("<imei>", checkImeiRequest.getImei());
+        logger.info("Message Tag:{} message:[{}]", messageTag, message);
 
-        var compStatus = chkImeiRespPrmRepo.getByTagAndLanguage(checkImeiRequest.getChannel().equalsIgnoreCase("ussd") ? status + "_ComplianceForUssd" : checkImeiRequest.getChannel().equalsIgnoreCase("sms") ? status + "_ComplianceForSms" : status + "_Compliance", checkImeiRequest.getLanguage());
+        String complianceStatusTag = checkImeiRequest.getChannel().equalsIgnoreCase("ussd") ? status + "_ComplianceForUssd" : checkImeiRequest.getChannel().equalsIgnoreCase("sms") ? status + "_ComplianceForSms" : status + "_Compliance";
+        var compStatus = chkImeiRespPrmRepo.getByTagAndLanguage(complianceStatusTag, checkImeiRequest.getLanguage());
 
         var complianceStatus = compStatus == null ? null : compStatus.getValue().replace("<imei>", checkImeiRequest.getImei());
-        logger.info("Compliance Status:::->" + complianceStatus + ", MDR Response  :->" + mappedDeviceDetails);
+        logger.info("Compliance StatusTag:{} Compliance Status:::-> {} MDR Response  :->{}", complianceStatusTag, compStatus, mappedDeviceDetails);
         var symbolTag = status + "_SymbolColor";
         var symbolResponse = chkImeiRespPrmRepo.getByTagAndFeatureName(symbolTag, "CheckImei");    //  message, deviceDetails == null ? null :
-        logger.info("SymbolColor Response :::->" + symbolResponse.toString());
+        logger.info("symbolTag:{} SymbolColor Response :::->{}", symbolTag, symbolResponse.toString());
 
         var symbolColor = symbolResponse.getValue();
 
@@ -186,7 +189,7 @@ public class CheckImeiServiceImpl {
         checkImeiRequest.setComplianceStatus(complianceStatus);
         checkImeiRequest.setSymbol_color(symbolColor);
         checkImeiRequest.setRequestProcessStatus("Success");
-        var result = new Result(isValidImei, symbolColor, complianceStatus, message + " " + remarksValue, mappedDeviceDetails == null ? null : mappedDeviceDetails);
+        var result = new Result(isValidImei, symbolColor, complianceStatus, message + ". " + remarksValue, mappedDeviceDetails == null ? null : mappedDeviceDetails);
         return result;
     }
 
@@ -239,6 +242,7 @@ public class CheckImeiServiceImpl {
         }
         return remarksValue;
     }
+
     public void saveCheckImeiFailDetails(CheckImeiRequest checkImeiRequest, long startTime, String desc) {
         checkImeiRequest.setRequestProcessStatus("Fail");
         checkImeiRequest.setFail_process_description(desc);
