@@ -16,7 +16,7 @@
     <name>apiservice3</name>
 
     <properties>
-        <java.version>11</java.version>
+        <java.version>17</java.version>
         <spring-cloud.version>Finchley.SR4</spring-cloud.version>
         <log4j2.version>2.20.0</log4j2.version>
     </properties>
@@ -197,7 +197,6 @@
     </dependencyManagement>
 
     <build>
-        <finalName>apiservice3</finalName>
         <plugins>
             <plugin>
                 <groupId>org.springframework.boot</groupId>
@@ -223,8 +222,8 @@
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
                 <configuration>
-                    <source>11</source>
-                    <target>11</target>
+                    <source>17</source>
+                    <target>17</target>
                 </configuration>
             </plugin>
         </plugins>
