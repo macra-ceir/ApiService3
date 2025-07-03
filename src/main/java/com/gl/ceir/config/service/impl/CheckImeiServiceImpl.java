@@ -189,44 +189,43 @@ public class CheckImeiServiceImpl {
         checkImeiRequest.setComplianceStatus(complianceStatus);
         checkImeiRequest.setSymbol_color(symbolColor);
         checkImeiRequest.setRequestProcessStatus("Success");
-        var result = new Result(isValidImei, symbolColor, complianceStatus, message + ". " + remarksValue, mappedDeviceDetails == null ? null : mappedDeviceDetails);
+        var result = new Result(isValidImei, symbolColor, complianceStatus, message + " " + remarksValue, mappedDeviceDetails == null ? null : mappedDeviceDetails);
         return result;
     }
 
     private String getRemarkString(CheckImeiRequest checkImeiRequest, LinkedHashMap<String, Boolean> r) {
         String remarksValue = "Remarks:";
         int val = 0;
-        boolean IMEI_PAIRING = r.getOrDefault("IMEI_PAIRING", false);
         boolean STOLEN = r.getOrDefault(stolenRule.trim(), false);
         boolean DUPLICATE_DEVICE = r.getOrDefault("DUPLICATE_DEVICE", false);
         boolean GSMA_BLACKLIST = r.getOrDefault("GSMA_BLACK_LISTED", false);
-        boolean isGsmaValid = r.get("EXISTS_IN_GSMA_DETAILS_DB") == null ? false : r.get("EXISTS_IN_GSMA_DETAILS_DB");
+        boolean isBlackListed = r.get("EXIST_IN_BLACKLIST_DB") == null ? false : r.get("EXIST_IN_BLACKLIST_DB");
 
-        logger.info("Remarks Check IMEI_PAIRING: {} , Stolen : {} ,DUPLICATE_DEVICE : {} ,GSMA_BLACKLIST {} ", IMEI_PAIRING, STOLEN, DUPLICATE_DEVICE, GSMA_BLACKLIST);
+        logger.info("Remarks Check , Stolen : {} ,DUPLICATE_DEVICE : {} ,GSMA_BLACKLIST {} ", STOLEN, DUPLICATE_DEVICE, GSMA_BLACKLIST);
 
-        if (!isGsmaValid && DUPLICATE_DEVICE && STOLEN)
+        if (!GSMA_BLACKLIST && DUPLICATE_DEVICE && STOLEN)
             val = 1;
-        if (!isGsmaValid && DUPLICATE_DEVICE && !STOLEN && GSMA_BLACKLIST)
+        if (!GSMA_BLACKLIST && DUPLICATE_DEVICE && !STOLEN && isBlackListed)
             val = 2;
-        if (!isGsmaValid && DUPLICATE_DEVICE && !STOLEN && !GSMA_BLACKLIST)
+        if (!GSMA_BLACKLIST && DUPLICATE_DEVICE && !STOLEN && !isBlackListed)
             val = 3;
-        if (!isGsmaValid && !DUPLICATE_DEVICE && STOLEN)
+        if (!GSMA_BLACKLIST && !DUPLICATE_DEVICE && STOLEN)
             val = 4;
-        if (!isGsmaValid && !DUPLICATE_DEVICE && !STOLEN && GSMA_BLACKLIST)
+        if (!GSMA_BLACKLIST && !DUPLICATE_DEVICE && !STOLEN && isBlackListed)
             val = 5;
-        if (!isGsmaValid && !DUPLICATE_DEVICE && !STOLEN && !GSMA_BLACKLIST)
+        if (!GSMA_BLACKLIST && !DUPLICATE_DEVICE && !STOLEN && !isBlackListed)
             val = 6;
-        if (isGsmaValid && DUPLICATE_DEVICE && STOLEN)
+        if (GSMA_BLACKLIST && DUPLICATE_DEVICE && STOLEN)
             val = 7;
-        if (isGsmaValid && DUPLICATE_DEVICE && !STOLEN && GSMA_BLACKLIST)
+        if (GSMA_BLACKLIST && DUPLICATE_DEVICE && !STOLEN && isBlackListed)
             val = 8;
-        if (isGsmaValid && DUPLICATE_DEVICE && !STOLEN && !GSMA_BLACKLIST)
+        if (GSMA_BLACKLIST && DUPLICATE_DEVICE && !STOLEN && !isBlackListed)
             val = 9;
-        if (isGsmaValid && !DUPLICATE_DEVICE && STOLEN)
+        if (GSMA_BLACKLIST && !DUPLICATE_DEVICE && STOLEN)
             val = 10;
-        if (isGsmaValid && !DUPLICATE_DEVICE && !STOLEN && GSMA_BLACKLIST)
+        if (GSMA_BLACKLIST && !DUPLICATE_DEVICE && !STOLEN && isBlackListed)
             val = 11;
-        if (isGsmaValid && !DUPLICATE_DEVICE && !STOLEN && !GSMA_BLACKLIST)
+        if (GSMA_BLACKLIST && !DUPLICATE_DEVICE && !STOLEN && !isBlackListed)
             val = 12;
 
         var remarkTag = "CheckImeiRemark_" + val;
@@ -236,7 +235,6 @@ public class CheckImeiServiceImpl {
                 remarkTag + "ForSms" : remarkTag, checkImeiRequest.getLanguage());
         remarksValue = (v == null || v.getValue().isEmpty())
                 ? " " : v.getValue().replace("<imei>", checkImeiRequest.getImei());
-        remarksValue = remarksValue.substring(0, remarksValue.length() - 1);
         if (remarksValue.equalsIgnoreCase("Remarks")) {
             remarksValue = "";
         }

@@ -8,10 +8,12 @@
 insert into app.rule (DESCRIPTION,NAME,OUTPUT,STATE) values ('Type approved Rule','GSMA_TYPE_APPROVED','YES','Enabled');
 insert into app.rule (DESCRIPTION,NAME,OUTPUT,STATE) values ('GSMA Valid Check Rule','EXISTS_IN_GSMA_DETAILS_DB','YES','Enabled');
 insert into app.rule (DESCRIPTION,NAME,OUTPUT,STATE) values ('GSMA Black Listed','GSMA_BLACK_LISTED','YES','Enabled');
+insert into app.rule (DESCRIPTION,NAME,OUTPUT,STATE) values ('GSMA Black Listed','EXIST_IN_BLACKLIST_DB','YES','Enabled');
 
 insert into app.feature_rule (FEATURE,GRACE_ACTION,NAME,POST_GRACE_ACTION,RULE_ORDER,USER_TYPE,FAILED_RULE_ACTION_GRACE,FAILED_RULE_ACTION_POST_GRACE,OUTPUT,RULE_MESSAGE) values ('CheckImei','Skip','GSMA_TYPE_APPROVED','',7,'default','Rule','Rule','Yes','');
 insert into app.feature_rule (FEATURE,GRACE_ACTION,NAME,POST_GRACE_ACTION,RULE_ORDER,USER_TYPE,FAILED_RULE_ACTION_GRACE,FAILED_RULE_ACTION_POST_GRACE,OUTPUT,RULE_MESSAGE) values ('CheckImei','Skip','EXISTS_IN_GSMA_DETAILS_DB','',8,'default','Rule','Rule','Yes','');
 insert into app.feature_rule (FEATURE,GRACE_ACTION,NAME,POST_GRACE_ACTION,RULE_ORDER,USER_TYPE,FAILED_RULE_ACTION_GRACE,FAILED_RULE_ACTION_POST_GRACE,OUTPUT,RULE_MESSAGE) values ('CheckImei','Skip','GSMA_BLACK_LISTED','',9,'default','Rule','Rule','Yes','');
+insert into app.feature_rule (FEATURE,GRACE_ACTION,NAME,POST_GRACE_ACTION,RULE_ORDER,USER_TYPE,FAILED_RULE_ACTION_GRACE,FAILED_RULE_ACTION_POST_GRACE,OUTPUT,RULE_MESSAGE) values ('CheckImei','Skip','EXIST_IN_BLACKLIST_DB','',10,'default','Rule','Rule','Yes','');
 
 INSERT INTO sys_param (description, tag, type, value, active, feature_name, remark, user_type, modified_by) VALUES ('URL of Check GSMA BLACKLISTED', 'CHECK_GSMA_BLACKLISTED_URL', 0, 'http://139.59.91.160:9508/globalCheckIMEI/gsmaGlobalBlackListAPI/checkStatus', 1, 'CheckImei', NULL, 'system', 'system');
 
@@ -94,6 +96,10 @@ INSERT INTO check_imei_response_param (description,tag,type,VALUE,ACTIVE,FEATURE
 INSERT INTO check_imei_response_param (description,tag,type,VALUE,ACTIVE,FEATURE_NAME,LANGUAGE) values ('','CheckImeiRemark_11',0,'This IMEI is found to be marked as blacklisted and globally blacklisted',0,'CheckImei','en');
 
 INSERT INTO check_imei_response_param (description,tag,type,VALUE,ACTIVE,FEATURE_NAME,LANGUAGE) values ('','CheckImeiRemark_12',0,'This IMEI is found to be marked as globaly blacklisted ',0,'CheckImei','en');
+
+
+update check_imei_response_param set VALUE='#FFFF00' where tag='CheckImeiResponse_5_SymbolColor'
+
 
 ---application.yml
 
