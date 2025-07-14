@@ -1,7 +1,16 @@
-##########-----Release 1.0.0.2
+##########-----Release 1.0.2
 
 ---Description
-1. GSMA BLACK LISTED and Type Approval Checks added
+For Check IMEI api below rules are enbaled
+1. GSMA BLACK LISTED throgh API
+2. Type Approval rule validation
+3. Black list check
+4. GSMA Valid
+
+Document :
+    FileName: Macra Check IMEI current check and implementation v1.xlsx
+    Sheet name: Sheet for typeapproval and GSMA
+
 
 ---Database Changes
 

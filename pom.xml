@@ -12,7 +12,7 @@
 
     <groupId>com.gl.ceir</groupId>
     <artifactId>apiservice3</artifactId>
-    <version>1.1.0.0</version>
+    <version>1.1.0</version>
     <name>apiservice3</name>
 
     <properties>
